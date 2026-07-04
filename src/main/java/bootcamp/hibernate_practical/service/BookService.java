@@ -7,7 +7,9 @@ import bootcamp.hibernate_practical.entity.Book;
 import bootcamp.hibernate_practical.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -30,42 +32,68 @@ public class BookService {
     }
 
     public List<BookResponse> getAllBooks() {
-        // TODO:
-        // Fetch all books from the repository
-        // Convert each Book entity into BookResponse DTO
-        // Return the list
-        return null;
+        List<Book> listOfBooks = bookRepository.findAll();
+        List<BookResponse> responseForBooks = new ArrayList<>();
+        for (Book book : listOfBooks) {
+            BookResponse bookResponse = new BookResponse(
+                    book.getId(),
+                    book.getTitle(),
+                    book.getAuthor(),
+                    book.getGenre(),
+                    book.getPublicationYear(),
+                    book.isAvailable());
+            responseForBooks.add(bookResponse);
+        }
+        return responseForBooks;
     }
 
     public BookResponse getBookById(Long id) {
-        // TODO
-        // Find the book by its ID
-        // Throw RuntimeException if not found
-        // Convert the entity to BookResponse
-        return null;
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("There is no book with this id"));
+        return new BookResponse(
+                book.getId(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getGenre(),
+                book.getPublicationYear(),
+                book.isAvailable()
+        );
     }
 
     public BookResponse updateBook(Long id, UpdateBookRequest request) {
-        // TODO
-        // Find existing book
-        // Update its fields
-        // Save the updated entity
-        // Convert to BookResponse
-        return null;
+        Book book = bookRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("There is no book with this id"));
+        book.setTitle(request.getTitle());
+        book.setAuthor(request.getAuthor());
+        book.setGenre(request.getGenre());
+        book.setPublicationYear(request.getPublicationYear());
+        book.setAvailable(request.isAvailable());
+        bookRepository.save(book);
+        return new BookResponse(
+                book.getId(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getGenre(),
+                book.getPublicationYear(),
+                book.isAvailable());
     }
 
     public void deleteBook(Long id) {
-        // TODO
+        bookRepository.deleteById(id);
     }
 
     public List<BookResponse> findByAuthor(String author) {
-        // TODO
-        return null;
+        List<Book> booksByAuthor = bookRepository.findByAuthor(author);
+        return booksByAuthor.stream()
+                .map(a -> new BookResponse(a.getId(),a.getTitle(),a.getAuthor(),a.getGenre(),a.getPublicationYear(),a.isAvailable()))
+                .collect(Collectors.toList());
     }
 
     public List<BookResponse> findAvailableBooks(){
-        // TODO
-        return null;
+        List<Book> availableBooks = bookRepository.findByAvailableTrue();
+        return availableBooks.stream()
+                .map(a -> new BookResponse(a.getId(),a.getTitle(),a.getAuthor(),a.getGenre(),a.getPublicationYear(),a.isAvailable()))
+                .collect(Collectors.toList());
     }
 
     private BookResponse mapToResponse(Book book) {
