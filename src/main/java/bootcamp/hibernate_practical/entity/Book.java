@@ -7,12 +7,13 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor; // Description below why I commented this out.
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
+//@RequiredArgsConstructor, could not launch the application with this annotation
+// to check if my endpoints are working in Insomnia so commented it out.
 @Data
 public class Book {
     @Id

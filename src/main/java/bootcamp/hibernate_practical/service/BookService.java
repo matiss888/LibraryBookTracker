@@ -50,14 +50,7 @@ public class BookService {
     public BookResponse getBookById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("There is no book with this id"));
-        return new BookResponse(
-                book.getId(),
-                book.getTitle(),
-                book.getAuthor(),
-                book.getGenre(),
-                book.getPublicationYear(),
-                book.isAvailable()
-        );
+        return mapToResponse(book);
     }
 
     public BookResponse updateBook(Long id, UpdateBookRequest request) {
@@ -69,13 +62,7 @@ public class BookService {
         book.setPublicationYear(request.getPublicationYear());
         book.setAvailable(request.isAvailable());
         bookRepository.save(book);
-        return new BookResponse(
-                book.getId(),
-                book.getTitle(),
-                book.getAuthor(),
-                book.getGenre(),
-                book.getPublicationYear(),
-                book.isAvailable());
+        return mapToResponse(book);
     }
 
     public void deleteBook(Long id) {
@@ -86,18 +73,23 @@ public class BookService {
         List<Book> booksByAuthor = bookRepository.findByAuthor(author);
         return booksByAuthor.stream()
                 .map(a -> new BookResponse(a.getId(),a.getTitle(),a.getAuthor(),a.getGenre(),a.getPublicationYear(),a.isAvailable()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<BookResponse> findAvailableBooks(){
         List<Book> availableBooks = bookRepository.findByAvailableTrue();
         return availableBooks.stream()
                 .map(a -> new BookResponse(a.getId(),a.getTitle(),a.getAuthor(),a.getGenre(),a.getPublicationYear(),a.isAvailable()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private BookResponse mapToResponse(Book book) {
-        // TODO: map Book to BookResponse
-        return null;
+        return new BookResponse(
+                book.getId(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getGenre(),
+                book.getPublicationYear(),
+                book.isAvailable());
     }
 }
