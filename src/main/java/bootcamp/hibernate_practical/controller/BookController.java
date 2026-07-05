@@ -68,4 +68,9 @@ public class BookController {
     public BookResponse returnTheBook(@PathVariable Long id) {
         return bookService.returnBook(id);
     }
+
+    @GetMapping("/publicationYear/{publicationYear}")
+    public List<BookResponse> getBooksByPublicationYear (@PathVariable int publicationYear) {
+        return bookService.findByPublicationYear(publicationYear);
+    }
 }

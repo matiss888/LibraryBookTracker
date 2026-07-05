@@ -124,4 +124,11 @@ public class BookService {
         bookRepository.save(book);
         return mapToResponse(book);
     }
+
+    public List<BookResponse> findByPublicationYear(int publicationYear) {
+        List<Book> booksByPublicationYear = bookRepository.findByPublicationYear(publicationYear);
+        return booksByPublicationYear.stream()
+                .map(a -> new BookResponse(a.getId(),a.getTitle(),a.getAuthor(),a.getGenre(),a.getPublicationYear(),a.isAvailable()))
+                .toList();
+    }
 }
