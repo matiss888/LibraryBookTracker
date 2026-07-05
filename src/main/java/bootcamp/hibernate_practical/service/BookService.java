@@ -131,4 +131,8 @@ public class BookService {
                 .map(a -> new BookResponse(a.getId(),a.getTitle(),a.getAuthor(),a.getGenre(),a.getPublicationYear(),a.isAvailable()))
                 .toList();
     }
+
+    public int countAvailableBooksInLibrary() {
+        return bookRepository.findByAvailableTrue().size();
+    }
 }

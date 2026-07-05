@@ -73,4 +73,9 @@ public class BookController {
     public List<BookResponse> getBooksByPublicationYear (@PathVariable int publicationYear) {
         return bookService.findByPublicationYear(publicationYear);
     }
+
+    @GetMapping("/countAvailableBooks")
+    public int countBooksinLibrary () {
+        return bookService.countAvailableBooksInLibrary();
+    }
 }
